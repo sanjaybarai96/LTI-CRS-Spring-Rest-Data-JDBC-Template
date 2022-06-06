@@ -52,9 +52,10 @@ public class StudentDAOImpl implements StudentDAO {
 	@Override
 	public long saveStudent(Student student) {
 		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
-				.withTableName("student")
-				.usingGeneratedKeyColumns("studentId");
+				.withTableName("student");
+
+		 simpleInsertJdbcInsert.execute(student.toMap());
+		 return student.getStudentId();
 		
-		return simpleInsertJdbcInsert.executeAndReturnKey(student.toMap()).longValue();
 	}
 }

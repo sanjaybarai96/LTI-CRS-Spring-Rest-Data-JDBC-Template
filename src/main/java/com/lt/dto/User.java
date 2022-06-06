@@ -5,6 +5,7 @@ package com.lt.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class User implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private long userId;
-	private String firstname;
+	private String firstName;
 	private String lastName;
 	private String userName;
 	private String password;
@@ -30,7 +31,7 @@ public class User implements Serializable{
 	private String location;
 	private long pincode;
 	private String country;
-	private LocalDate createDate;
+	private Date createDate;
 	private String role;
 	private int isApprove;
 	private boolean session;
@@ -42,10 +43,10 @@ public class User implements Serializable{
 		this.userId = userId;
 	}
 	public String getFirstname() {
-		return firstname;
+		return firstName;
 	}
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstname(String firstName) {
+		this.firstName = firstName;
 	}
 	public String getLastName() {
 		return lastName;
@@ -101,10 +102,10 @@ public class User implements Serializable{
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public LocalDate getCreateDate() {
+	public Date getCreateDate() {
 		return createDate;
 	}
-	public void setCreateDate(LocalDate createDate) {
+	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 	public String getRole() {
@@ -132,7 +133,7 @@ public class User implements Serializable{
 	public Map<String, ?> toMap() {
 		 Map<String, Object> values = new HashMap<>();
 		  values.put("userId", userId);
-		  values.put("firstname", firstname);
+		  values.put("firstName", firstName);
 		  values.put("lastName", lastName);
 		  values.put("userName", userName);
 		  values.put("password", password);

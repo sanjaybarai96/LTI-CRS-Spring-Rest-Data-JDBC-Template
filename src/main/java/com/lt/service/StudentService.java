@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import com.lt.dto.RegisterCourse;
 import com.lt.dto.Student;
 import com.lt.exception.UserNotFoundException;
 
-import net.minidev.json.JSONObject;
 
 @Service
 public class StudentService implements StudentServiceInterface {
@@ -46,7 +46,7 @@ public class StudentService implements StudentServiceInterface {
 			long userId = Long.valueOf(jsonBody.get(Consonant.User_id).toString());
 			RegisterCourse registerCourse = new RegisterCourse();
 			registerCourse.setStudentId(userId);
-			registerCourse.setBranch(jsonBody.getAsString(Consonant.Branch_Name));
+			registerCourse.setBranch(jsonBody.get(Consonant.Branch_Name).toString());
 			if (studentDao.saveCourseRegistration(registerCourse) != 0) {
 				logger.info("coure resgistered saved");
 				updateStudent(userId, registerCourse.getBranch());
@@ -95,10 +95,10 @@ public class StudentService implements StudentServiceInterface {
 	 * @param jsonBody
 	 */
 	public ResponseEntity<?> addCourse(JSONObject jsonBody) {
-		long userId = Long.valueOf(jsonBody.getAsString(Consonant.User_id));
+		long userId = Long.valueOf(jsonBody.get(Consonant.User_id).toString());
 		Student student = studentDao.getStudentByID(userId);
 		if (student != null) {
-			String courseCode = jsonBody.getAsString(Consonant.Course_Code);
+			String courseCode = jsonBody.get(Consonant.Course_Code).toString();
 			student.setCourseCode((student.getCourseCode() == null || student.getCourseCode().isEmpty()) ? courseCode
 					: String.join(",", student.getCourseCode(), courseCode));
 			studentDao.updateStudent(student, userId);
@@ -116,18 +116,18 @@ public class StudentService implements StudentServiceInterface {
 	public ResponseEntity<?> dropCourse(JSONObject jsonBody) {
 		try {
 			logger.info("Body request:: " + jsonBody);
-			long userId = Long.valueOf(jsonBody.getAsString(Consonant.User_id));
+			long userId = Long.valueOf(jsonBody.get(Consonant.User_id).toString());
 
 			Student student = studentDao.getStudentByID(userId);
 			if (student != null) {
-				String courseCode = jsonBody.getAsString(Consonant.Course_Code);
+				String courseCode = jsonBody.get(Consonant.Course_Code).toString();
 				List<String> stdCourseCodeList = new ArrayList<String>(
 						Arrays.asList(student.getCourseCode().split(",")));
 				stdCourseCodeList.removeAll(Arrays.asList(courseCode.split(",")));
 				student.setCourseCode(stdCourseCodeList.stream().collect(Collectors.joining(",")));
 				studentDao.updateStudent(student, userId);
 			} else {
-				throw new UserNotFoundException(jsonBody.getAsString(Consonant.User_id));
+				throw new UserNotFoundException(jsonBody.get(Consonant.User_id).toString());
 			}
 			return new ResponseEntity<Object>(student, HttpStatus.OK);
 		} catch (UserNotFoundException e) {

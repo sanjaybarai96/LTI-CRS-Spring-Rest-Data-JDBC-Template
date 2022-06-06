@@ -1,10 +1,10 @@
 package com.lt.service;
 
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 
 import com.lt.dto.User;
 
-import net.minidev.json.JSONObject;
 
 public interface UserServiceInterface {
 
@@ -12,7 +12,7 @@ public interface UserServiceInterface {
 
 	public ResponseEntity<?> userLogout(JSONObject jsonBody);
 
-	public ResponseEntity<?> registerUser(JSONObject jsonBody);
+	public ResponseEntity<?> registerUser(User user);
 
 	public ResponseEntity<?> resetPassword();
 
