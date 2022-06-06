@@ -66,7 +66,7 @@ public class StudentService implements StudentServiceInterface {
 	}
 
 	/**
-	 *Getting all the course list
+	 * Getting all the course list
 	 */
 	public ResponseEntity<?> getCourses() {
 		return new ResponseEntity<>(courseService.getCourses(), HttpStatus.OK);
@@ -74,6 +74,7 @@ public class StudentService implements StudentServiceInterface {
 
 	/**
 	 * Get course belongs to user selected
+	 * 
 	 * @param userId
 	 * @return
 	 */
@@ -88,9 +89,9 @@ public class StudentService implements StudentServiceInterface {
 		}
 	}
 
-	
 	/**
 	 * Adding the course by student
+	 * 
 	 * @param jsonBody
 	 */
 	public ResponseEntity<?> addCourse(JSONObject jsonBody) {
@@ -107,10 +108,10 @@ public class StudentService implements StudentServiceInterface {
 		return new ResponseEntity<Object>(student, HttpStatus.OK);
 	}
 
-	
 	/**
-	 *Removing course by student
-	 *@param jsonBody
+	 * Removing course by student
+	 * 
+	 * @param jsonBody
 	 */
 	public ResponseEntity<?> dropCourse(JSONObject jsonBody) {
 		try {
@@ -120,7 +121,8 @@ public class StudentService implements StudentServiceInterface {
 			Student student = studentDao.getStudentByID(userId);
 			if (student != null) {
 				String courseCode = jsonBody.getAsString(Consonant.Course_Code);
-				List<String> stdCourseCodeList = new ArrayList<String>(Arrays.asList(student.getCourseCode().split(",")));
+				List<String> stdCourseCodeList = new ArrayList<String>(
+						Arrays.asList(student.getCourseCode().split(",")));
 				stdCourseCodeList.removeAll(Arrays.asList(courseCode.split(",")));
 				student.setCourseCode(stdCourseCodeList.stream().collect(Collectors.joining(",")));
 				studentDao.updateStudent(student, userId);
@@ -137,22 +139,26 @@ public class StudentService implements StudentServiceInterface {
 		}
 	}
 
+	public List<Student> getStudentsByCourseCode(List<String> courseCodes) {
+		List<Student> studentList = studentDao.getStudentByCourseCodes(courseCodes);
+		return studentList;
+	}
+
 	/**
-	 *add student 
+	 * add student
 	 */
 	@Override
 	public ResponseEntity<?> addStudent(Student student) {
-	logger.info("Body request:: " );
-	try {
-	if(student != null) {
-		studentDao.saveStudent(student);
+		logger.info("Body request:: ");
+		try {
+			if (student != null) {
+				studentDao.saveStudent(student);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<>("Student not saved in the database", HttpStatus.CONFLICT);
 		}
-	}catch(Exception e) {
-		logger.error(e.getMessage());
-		return new ResponseEntity<>("Student not saved in the database", HttpStatus.CONFLICT);
-	}
-	return new ResponseEntity<Object>(student, HttpStatus.OK);		
-	}
-	
+		return new ResponseEntity<Object>(student, HttpStatus.OK);
 	}
 
+}

@@ -10,4 +10,5 @@ public interface CourseDAO {
 	public List<Course> getCourseByCourseCode(List<String> courseCodes);
 	public String saveCourse(Course course);
 	public boolean removeCourse(String courseCode);
+	public List<Course> getCourseByInstructor(String professorName);
 }

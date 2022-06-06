@@ -23,10 +23,5 @@ public class Professor implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	
 	
 }
