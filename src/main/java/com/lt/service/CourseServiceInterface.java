@@ -8,5 +8,8 @@ public interface CourseServiceInterface {
 
 	public List<Course> getCourses();
 	public List<Course> getCourseByCourseCode(List<String> courseCode);
+	public void addCourse(Course course);
+	public void removeCourse(String courseCode);
+
 
 }

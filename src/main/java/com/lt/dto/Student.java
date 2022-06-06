@@ -30,10 +30,5 @@ public class Student implements Serializable{
 	public void setBranch(String branch) {
 		this.branch = branch;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
-	
 
 }

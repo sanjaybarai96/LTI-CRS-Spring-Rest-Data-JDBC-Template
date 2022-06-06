@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.lt.dao.CourseDAOImpl;
 import com.lt.dto.Course;
+import com.lt.exception.CourseNotAddException;
 
 @Service
 public class CourseService implements CourseServiceInterface {
@@ -21,6 +22,20 @@ public class CourseService implements CourseServiceInterface {
 
 	public List<Course> getCourseByCourseCode(List<String> courseCodes) {
 		return courseDao.getCourseByCourseCode(courseCodes);
+	}
+
+	public void addCourse(Course course) throws CourseNotAddException {
+		String courseCode = courseDao.saveCourse(course);
+		if(courseCode==null) {
+			throw new CourseNotAddException(courseCode);
+		}
+	}
+
+	public void removeCourse(String courseCode) {
+		boolean status = courseDao.removeCourse(courseCode);
+		if(!status) {
+			throw new CourseNotAddException(courseCode);
+		}
 	}
 
 }
