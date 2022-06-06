@@ -32,9 +32,7 @@ public class Student implements Serializable{
 	public void setBranch(String branch) {
 		this.branch = branch;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+
 	public Map<String, ?> toMap() {
 		Map<String, Object> values = new HashMap<>();
 		  values.put("studentId", studentId);
@@ -44,6 +42,6 @@ public class Student implements Serializable{
 		  return values;
 	}
 	
-	
+
 
 }

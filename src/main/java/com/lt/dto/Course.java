@@ -1,9 +1,12 @@
 package com.lt.dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Course {
 
 	private String courseCode;
-	private String name;
+	private String coursename;
 	private boolean isOffered;
 	private String instructor;
 	private double price;
@@ -14,11 +17,11 @@ public class Course {
 	public void setCourseCode(String courseCode) {
 		this.courseCode = courseCode;
 	}
-	public String getName() {
-		return name;
+	public String getCourseName() {
+		return coursename;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setCourseName(String name) {
+		this.coursename = name;
 	}
 	public boolean isOffered() {
 		return isOffered;
@@ -38,6 +41,13 @@ public class Course {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	
-	
+	public Map<String, Object> toMap() {
+		 Map<String, Object> values = new HashMap<>();
+		  values.put("courseCode", courseCode);
+		  values.put("coursename", coursename);
+		  values.put("isOffered", isOffered);
+		  values.put("instructor", instructor);
+		  values.put("price", price);
+		  return values;
+	}
 }
