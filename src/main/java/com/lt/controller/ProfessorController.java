@@ -37,6 +37,7 @@ public class ProfessorController {
 
 	/**
 	 * get the student respective professor course
+	 * 
 	 * @param jsonObject
 	 * @return
 	 */
@@ -47,6 +48,7 @@ public class ProfessorController {
 
 	/**
 	 * professor can view the course respective
+	 * 
 	 * @param jsonObject
 	 * @return
 	 */

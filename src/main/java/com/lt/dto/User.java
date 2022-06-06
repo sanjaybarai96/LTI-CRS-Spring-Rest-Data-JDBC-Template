@@ -5,6 +5,8 @@ package com.lt.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author user215
@@ -12,6 +14,7 @@ import java.time.LocalDate;
  */
 public class User implements Serializable{
 
+	
 	/**
 	 * 
 	 */
@@ -125,5 +128,28 @@ public class User implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	public Map<String, ?> toMap() {
+		 Map<String, Object> values = new HashMap<>();
+		  values.put("userId", userId);
+		  values.put("firstname", firstname);
+		  values.put("lastName", lastName);
+		  values.put("userName", userName);
+		  values.put("password", password);
+		  values.put("emailId", emailId);
+		  values.put("dateOfBirth", dateOfBirth);
+		  values.put("address", address);
+		  values.put("location", location);
+		  values.put("pincode", pincode);
+		  values.put("country", country);
+		  values.put("createDate", createDate);
+		  values.put("role", role);
+		  values.put("isApprove", isApprove);
+		  values.put("session", session );
+		  
+		  
+		  return values;
+	}
+	
 	
 }

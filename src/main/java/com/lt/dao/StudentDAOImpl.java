@@ -48,4 +48,13 @@ public class StudentDAOImpl implements StudentDAO {
 		List<Student> studentList = jdbcConfiguration.jdbcTemplate().queryForList(String.format(sql, parameter),Student.class);
 		return studentList;
 	}
+	
+	@Override
+	public long saveStudent(Student student) {
+		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
+				.withTableName("student")
+				.usingGeneratedKeyColumns("studentId");
+		
+		return simpleInsertJdbcInsert.executeAndReturnKey(student.toMap()).longValue();
+	}
 }
