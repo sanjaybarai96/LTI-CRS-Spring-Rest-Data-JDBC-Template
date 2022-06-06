@@ -1,6 +1,8 @@
 package com.lt.dto;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Student implements Serializable{
 
@@ -32,6 +34,14 @@ public class Student implements Serializable{
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public Map<String, ?> toMap() {
+		Map<String, Object> values = new HashMap<>();
+		  values.put("studentId", studentId);
+		  values.put("courseCode", courseCode);
+		  values.put("branch", branch);
+		  
+		  return values;
 	}
 	
 	
