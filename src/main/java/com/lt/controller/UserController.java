@@ -1,5 +1,6 @@
 package com.lt.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lt.dto.User;
 import com.lt.service.UserServiceInterface;
 
-import net.minidev.json.JSONObject;
+
 
 /**
  * @author user217
@@ -29,8 +31,8 @@ public class UserController {
 	 */
 	@RequestMapping(value="/userReg",method = RequestMethod.POST)
 	@ResponseStatus
-	public ResponseEntity<?> userRegistration(@RequestBody JSONObject jsonBody) {
-		return userService.registerUser(jsonBody);
+	public ResponseEntity<?> userRegistration(@RequestBody User user) {
+		return userService.registerUser(user);
 	}
 	
 	

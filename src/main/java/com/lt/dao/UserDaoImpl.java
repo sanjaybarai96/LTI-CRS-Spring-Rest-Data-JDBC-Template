@@ -34,6 +34,7 @@ import com.lt.dto.User;
 public class UserDaoImpl implements UserDao {
 
 	Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+	
 	@Autowired
 	JDBCConfiguration jdbcConfiguration;
 	

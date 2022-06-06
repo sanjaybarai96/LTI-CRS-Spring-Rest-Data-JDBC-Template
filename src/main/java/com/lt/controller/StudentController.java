@@ -3,6 +3,7 @@
  */
 package com.lt.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lt.service.StudentService;
 
-import net.minidev.json.JSONObject;
 
 /**
  * @author user215
