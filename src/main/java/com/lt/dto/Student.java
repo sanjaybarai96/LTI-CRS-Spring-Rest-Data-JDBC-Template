@@ -9,7 +9,7 @@ public class Student implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private long studentId;
-	private String course;
+	private String courseCode;
 	private String branch;
 	
 	public long getStudentId() {
@@ -18,11 +18,11 @@ public class Student implements Serializable{
 	public void setStudentId(long studentId) {
 		this.studentId = studentId;
 	}
-	public String getCourse() {
-		return course;
+	public String getCourseCode() {
+		return courseCode;
 	}
-	public void setCourse(String course) {
-		this.course = course;
+	public void setCourseCode(String course) {
+		this.courseCode = course;
 	}
 	public String getBranch() {
 		return branch;

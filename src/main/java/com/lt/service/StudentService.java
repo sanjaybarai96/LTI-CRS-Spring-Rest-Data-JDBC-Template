@@ -1,5 +1,10 @@
 package com.lt.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lt.consants.Consonant;
 import com.lt.dao.StudentDAOImpl;
+import com.lt.dto.Course;
 import com.lt.dto.RegisterCourse;
 import com.lt.dto.Student;
+import com.lt.exception.UserNotFoundException;
 
 import net.minidev.json.JSONObject;
 
@@ -21,7 +28,10 @@ public class StudentService implements StudentServiceInterface {
 	private Logger logger = LoggerFactory.getLogger(StudentService.class);
 
 	@Autowired
-	StudentDAOImpl stduentDao;
+	StudentDAOImpl studentDao;
+
+	@Autowired
+	CourseService courseService;
 
 	/**
 	 * course registration method
@@ -37,7 +47,7 @@ public class StudentService implements StudentServiceInterface {
 			RegisterCourse registerCourse = new RegisterCourse();
 			registerCourse.setStudentId(userId);
 			registerCourse.setBranch(jsonBody.getAsString(Consonant.Branch_Name));
-			if (stduentDao.saveCourseRegistration(registerCourse) != 0) {
+			if (studentDao.saveCourseRegistration(registerCourse) != 0) {
 				logger.info("coure resgistered saved");
 				updateStudent(userId, registerCourse.getBranch());
 			}
@@ -48,11 +58,83 @@ public class StudentService implements StudentServiceInterface {
 			return new ResponseEntity<>("Contact administrator", HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	private void updateStudent(long userId, String branch) {
-		Student student = stduentDao.getStudentByID(userId);
+		Student student = studentDao.getStudentByID(userId);
 		student.setBranch(branch);
-		stduentDao.updateStudent(student, userId);
+		studentDao.updateStudent(student, userId);
+	}
+
+	/**
+	 *Getting all the course list
+	 */
+	public ResponseEntity<?> getCourses() {
+		return new ResponseEntity<>(courseService.getCourses(), HttpStatus.OK);
+	}
+
+	/**
+	 * Get course belongs to user selected
+	 * @param userId
+	 * @return
+	 */
+	public ResponseEntity<?> getCourse(long userId) {
+		Student student = studentDao.getStudentByID(userId);
+		if (student.getCourseCode() != null && !student.getCourseCode().isEmpty()) {
+			List<String> studentCourseCode = Arrays.asList(student.getCourseCode().split(","));
+			List<Course> courses = courseService.getCourseByCourseCode(studentCourseCode);
+			return new ResponseEntity<>(courses, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("Please first add the course", HttpStatus.OK);
+		}
+	}
+
+	
+	/**
+	 * Adding the course by student
+	 * @param jsonBody
+	 */
+	public ResponseEntity<?> addCourse(JSONObject jsonBody) {
+		long userId = Long.valueOf(jsonBody.getAsString(Consonant.User_id));
+		Student student = studentDao.getStudentByID(userId);
+		if (student != null) {
+			String courseCode = jsonBody.getAsString(Consonant.Course_Code);
+			student.setCourseCode((student.getCourseCode() == null || student.getCourseCode().isEmpty()) ? courseCode
+					: String.join(",", student.getCourseCode(), courseCode));
+			studentDao.updateStudent(student, userId);
+		} else {
+			return new ResponseEntity<Object>("User not found", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Object>(student, HttpStatus.OK);
+	}
+
+	
+	/**
+	 *Removing course by student
+	 *@param jsonBody
+	 */
+	public ResponseEntity<?> dropCourse(JSONObject jsonBody) {
+		try {
+			logger.info("Body request:: " + jsonBody);
+			long userId = Long.valueOf(jsonBody.getAsString(Consonant.User_id));
+
+			Student student = studentDao.getStudentByID(userId);
+			if (student != null) {
+				String courseCode = jsonBody.getAsString(Consonant.Course_Code);
+				List<String> stdCourseCodeList = new ArrayList<String>(Arrays.asList(student.getCourseCode().split(",")));
+				stdCourseCodeList.removeAll(Arrays.asList(courseCode.split(",")));
+				student.setCourseCode(stdCourseCodeList.stream().collect(Collectors.joining(",")));
+				studentDao.updateStudent(student, userId);
+			} else {
+				throw new UserNotFoundException(jsonBody.getAsString(Consonant.User_id));
+			}
+			return new ResponseEntity<Object>(student, HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<>("Contact administrator", HttpStatus.CONFLICT);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<>("Contact administrator", HttpStatus.CONFLICT);
+		}
 	}
 
 }
