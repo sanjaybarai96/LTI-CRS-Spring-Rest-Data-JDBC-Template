@@ -137,4 +137,9 @@ public class StudentService implements StudentServiceInterface {
 		}
 	}
 
+	public List<Student> getStudentsByCourseCode(List<String> courseCodes) {
+		List<Student> studentList = studentDao.getStudentByCourseCodes(courseCodes);
+		return studentList;
+	}
+
 }

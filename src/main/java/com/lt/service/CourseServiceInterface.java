@@ -10,6 +10,7 @@ public interface CourseServiceInterface {
 	public List<Course> getCourseByCourseCode(List<String> courseCode);
 	public void addCourse(Course course);
 	public void removeCourse(String courseCode);
+	public List<Course> getCourseByInstructor(String professorName);
 
 
 }

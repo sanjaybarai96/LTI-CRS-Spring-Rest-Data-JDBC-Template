@@ -38,4 +38,9 @@ public class CourseService implements CourseServiceInterface {
 		}
 	}
 
+	public List<Course> getCourseByInstructor(String professorName) {
+		List<Course> professor = courseDao.getCourseByInstructor(professorName);
+		return professor;
+	}
+
 }
