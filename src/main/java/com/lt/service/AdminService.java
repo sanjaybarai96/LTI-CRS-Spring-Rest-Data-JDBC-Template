@@ -1,22 +1,23 @@
 package com.lt.service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.lt.dto.User;
 
 @Service
 public class AdminService implements AdminServiceInterface {
 
-	public List<User> getStudentList() {
-//		return userDao.getAllStudentUser();
-		return null;
+	@Autowired
+	UserService userService;
+
+	public List<Map<String, Object>> getStudentList() {
+		return userService.getAllStudentUser();
 	}
 
-	public void approveStudents(long userId) {
-//		return null;
+	public long approveStudents(long userId) {
+		return userService.approveStudent(userId);
 	}
 
 }

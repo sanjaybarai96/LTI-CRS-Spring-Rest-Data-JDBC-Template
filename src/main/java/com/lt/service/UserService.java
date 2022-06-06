@@ -1,7 +1,8 @@
 package com.lt.service;
 
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.lt.consants.Consonant;
 import com.lt.consants.Role;
-import com.lt.dao.UserDao;
+import com.lt.dao.UserDaoImpl;
 import com.lt.dto.Student;
 import com.lt.dto.User;
 
@@ -28,12 +29,10 @@ public class UserService implements UserServiceInterface {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
-	UserDao userSrevice;
+	UserDaoImpl userDao;
 
 	@Autowired
 	StudentServiceInterface studentService;
-
-	@Autowired
 
 	/**
 	 * UserLogin method
@@ -45,13 +44,13 @@ public class UserService implements UserServiceInterface {
 			String userName = (String) (jsonBody.get(Consonant.User_Name));
 			String password = (String) (jsonBody.get(Consonant.Password));
 
-			User user = userSrevice.getUserByUserName(userName);
-			if (checkingCredentials(user, userName, password)) {
-				user.setSession(true);
-				userSrevice.updateSession(user.getUserId(), true);
+			Map<String,Object> userMap = userDao.getUserByUserName(userName);
+			if (checkingCredentials(userMap, userName, password)) {
+				userMap.put("session",true);
+				userDao.updateSession(Long.valueOf(userMap.get("userId").toString()), true);
 			}
 
-			return new ResponseEntity<>(user, HttpStatus.OK);
+			return new ResponseEntity<>(userMap, HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error("Exception User not Found the Database:: " + e.getMessage());
@@ -59,9 +58,9 @@ public class UserService implements UserServiceInterface {
 		}
 	}
 
-	private boolean checkingCredentials(User user, String username, String password) {
-		if (user != null) {
-			if (user.getPassword().equals(password))
+	private boolean checkingCredentials(Map<String,Object> userMap, String username, String password) {
+		if (userMap != null) {
+			if (userMap.get("password").equals(password))
 				return true;
 			else {
 				System.out.println("Password does not match");
@@ -77,7 +76,7 @@ public class UserService implements UserServiceInterface {
 	public ResponseEntity<?> userLogout(JSONObject jsonBody) {
 
 		long userId = Long.valueOf(jsonBody.get(Consonant.User_id).toString());
-		userSrevice.updateSession(userId, false);
+		userDao.updateSession(userId, false);
 		return new ResponseEntity<>("Logout successFully", HttpStatus.OK);
 	}
 
@@ -98,7 +97,7 @@ public class UserService implements UserServiceInterface {
 		long userId = Long.valueOf(jsonBody.get(Consonant.User_id).toString());
 		String newPassword = jsonBody.get(Consonant.New_Password).toString();
 
-		userSrevice.updateUserPassword(userId, newPassword);
+		userDao.updateUserPassword(userId, newPassword);
 		return new ResponseEntity<>("SuccessFully update Password the User", HttpStatus.OK);
 	}
 
@@ -124,7 +123,8 @@ public class UserService implements UserServiceInterface {
 		user.setIsApprove(isApprove);
 		user.setRole(role.name());
 		user.setSession(false);
-		userSrevice.saveUser(user);
+		long userId =userDao.saveUser(user);
+		user.setUserId(userId);
 
 	}
 
@@ -132,5 +132,15 @@ public class UserService implements UserServiceInterface {
 		Student student = new Student();
 		student.setStudentId(user.getUserId());
 		studentService.addStudent(student);
+	}
+
+	public List<Map<String,Object>> getAllStudentUser() {
+		List<Map<String,Object>> studentUser = userDao.getAllStudentUser();
+		return studentUser;
+	}
+
+	public long approveStudent(long userId) {
+		return userDao.approveStudent(userId);
+		
 	}
 }
