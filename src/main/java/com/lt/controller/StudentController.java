@@ -53,7 +53,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value="/getCourse/{id}",method = RequestMethod.GET)
-	public ResponseEntity<?> getCourseByStudentId(@PathVariable("id") String id) {
+	public ResponseEntity<?> getCourseByStudentId(@PathVariable("id") long id) {
 		return studentService.getCourse(id);
 	}
 	

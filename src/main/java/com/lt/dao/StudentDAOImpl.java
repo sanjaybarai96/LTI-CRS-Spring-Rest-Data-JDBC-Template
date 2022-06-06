@@ -35,8 +35,8 @@ public class StudentDAOImpl implements StudentDAO {
 
 
 	public long updateStudent(Student student, long userId) {
-		String sql = "update student set branch=? where userId=?";
-		jdbcConfiguration.jdbcTemplate().update(sql,student.getBranch(),userId);
+		String sql = "update student set branch=?,coursecode=? where userId=?";
+		jdbcConfiguration.jdbcTemplate().update(sql,student.getBranch(),student.getCourseCode(),userId);
 		logger.info("student branch update for id ::"+userId);
 		return userId;
 	}
