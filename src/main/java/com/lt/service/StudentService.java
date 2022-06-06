@@ -137,4 +137,22 @@ public class StudentService implements StudentServiceInterface {
 		}
 	}
 
-}
+	/**
+	 *add student 
+	 */
+	@Override
+	public ResponseEntity<?> addStudent(Student student) {
+	logger.info("Body request:: " );
+	try {
+	if(student != null) {
+		studentDao.saveStudent(student);
+		}
+	}catch(Exception e) {
+		logger.error(e.getMessage());
+		return new ResponseEntity<>("Student not saved in the database", HttpStatus.CONFLICT);
+	}
+	return new ResponseEntity<Object>(student, HttpStatus.OK);		
+	}
+	
+	}
+

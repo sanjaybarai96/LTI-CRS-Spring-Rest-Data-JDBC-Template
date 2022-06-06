@@ -10,4 +10,7 @@ public interface StudentDAO {
 	public Student getStudentByID(Number userId); 
 	
 	public long updateStudent(Student student, long userId);
+	
+	public long saveStudent(Student student);
+	
 }

@@ -40,4 +40,14 @@ public class StudentDAOImpl implements StudentDAO {
 		logger.info("student branch update for id ::"+userId);
 		return userId;
 	}
+
+
+	@Override
+	public long saveStudent(Student student) {
+		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
+				.withTableName("student")
+				.usingGeneratedKeyColumns("studentId");
+		
+		return simpleInsertJdbcInsert.executeAndReturnKey(student.toMap()).longValue();
+	}
 }
