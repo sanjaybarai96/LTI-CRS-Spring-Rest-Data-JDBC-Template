@@ -4,6 +4,7 @@
 package com.lt.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,7 +87,7 @@ public class AdminController {
 	 */
 	@RequestMapping(value = "/studentAproval", method = RequestMethod.GET)
 	public ResponseEntity<?> studentAproval() {
-		List<User> user = adminService.getStudentList();
+		List<Map<String,Object>> user = adminService.getStudentList();
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
@@ -97,11 +98,13 @@ public class AdminController {
 	 * @return
 	 */
 	@RequestMapping(value = "/studentAproval/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> studentAproval(@PathVariable long userId) {
-		adminService.approveStudents(userId);
-		// return new ResponseEntity<>("No Student found for ID " + userId,
-		// HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(userId, HttpStatus.OK);
+	public ResponseEntity<?> studentAproval(@PathVariable("id") long userId) {
+		long updatedUserId = adminService.approveStudents(userId);
+		if(updatedUserId>0) {
+			return new ResponseEntity<>(userId, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("No Student found for ID " + userId,
+				HttpStatus.NOT_FOUND);
 	}
 
 }

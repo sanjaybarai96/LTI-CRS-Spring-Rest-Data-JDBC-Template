@@ -51,10 +51,13 @@ public class StudentDAOImpl implements StudentDAO {
 	
 	@Override
 	public long saveStudent(Student student) {
-		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
-				.withTableName("student");
+		String sql = "insert into student values(?,?,?)";
+		
+//		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
+//				.withTableName("student");
 
-		 simpleInsertJdbcInsert.execute(student.toMap());
+//		 simpleInsertJdbcInsert.execute(student.toMap());
+		jdbcConfiguration.jdbcTemplate().update(sql,student.getStudentId(),student.getBranch(),student.getCourseCode());
 		 return student.getStudentId();
 		
 	}

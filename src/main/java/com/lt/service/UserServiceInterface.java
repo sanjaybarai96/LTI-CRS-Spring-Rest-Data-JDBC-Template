@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.lt.dto.User;
 
-
 public interface UserServiceInterface {
 
 	public ResponseEntity<?> userLogin(JSONObject jsonBody);
@@ -17,5 +16,7 @@ public interface UserServiceInterface {
 	public ResponseEntity<?> resetPassword();
 
 	public ResponseEntity<?> updatePassword(JSONObject jsonBody);
+
+	public long approveStudent(long userId);
 
 }

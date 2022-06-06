@@ -1,13 +1,12 @@
 package com.lt.service;
 
 import java.util.List;
-
-import com.lt.dto.User;
+import java.util.Map;
 
 public interface AdminServiceInterface {
 
 	
-	public List<User> getStudentList();
-	public void approveStudents(long userId);
+	public List<Map<String,Object>> getStudentList();
+	public long approveStudents(long userId);
 	
 }
