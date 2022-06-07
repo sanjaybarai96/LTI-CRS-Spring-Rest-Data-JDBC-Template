@@ -8,5 +8,7 @@ package com.lt.consants;
  *
  */
 public class JDBCSqlConstant {
+	
+	private static String UserByUserName="select * from user where userName=?";
 
 }
