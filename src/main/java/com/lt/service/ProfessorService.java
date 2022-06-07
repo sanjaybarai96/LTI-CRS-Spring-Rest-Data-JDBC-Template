@@ -87,9 +87,8 @@ public class ProfessorService implements ProfessorServiceInterface {
 	}
 
 	@Override
-	public ResponseEntity<?> viewCourse(JSONObject jsonBody) {
-		long userId = Long.valueOf(jsonBody.getAsString(Consonant.User_id));
-		Professor professor = professorDao.getProfessorById(userId);
+	public ResponseEntity<?> viewCourse(long professorId) {
+		Professor professor = professorDao.getProfessorById(professorId);
 		List<Course> courseList = courseService.getCourseByInstructor(professor.getName());
 		return new ResponseEntity<>(courseList, HttpStatus.OK);
 	}
