@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lt.dto.User;
 import com.lt.service.ProfessorService;
 
 import net.minidev.json.JSONObject;
@@ -25,15 +26,6 @@ public class ProfessorController {
 
 	@Autowired
 	ProfessorService professorService;
-
-//	@RequestMapping(value="/addProfessor",method = RequestMethod.POST)
-//	public void addProfessor(@RequestBody User user) {
-//		user.setPassword("Admin@123");
-//		userService.createUser(user, 1, Role.Professor);
-//		
-////		professorService.addProfessor(user);
-//		
-//	}
 
 	/**
 	 * get the student respective professor course

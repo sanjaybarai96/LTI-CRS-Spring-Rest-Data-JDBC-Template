@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.lt.consants.Consonant;
+import com.lt.consants.Role;
 import com.lt.dao.ProfessorDAOImpl;
 import com.lt.dto.Course;
 import com.lt.dto.Professor;
@@ -26,45 +27,50 @@ import net.minidev.json.JSONObject;
 public class ProfessorService implements ProfessorServiceInterface {
 
 	Logger logger = LoggerFactory.getLogger(ProfessorService.class);
-	
+
 	@Autowired
 	CourseService courseService;
-	
+
 	@Autowired
 	ProfessorDAOImpl professorDao;
-	
+
 	@Autowired
 	StudentService studentService;
-	
+
+	@Autowired
+	UserService userService;
+
 	@Override
 	public JSONArray viewEnrolledStudents(JSONObject jsonObject) {
 		long userId = Long.valueOf(jsonObject.getAsString(Consonant.User_id));
 		Professor professor = professorDao.getProfessorById(userId);
-		if(professor == null) {
+		if (professor == null) {
 			throw new UserNotFoundException(jsonObject.getAsString(Consonant.User_id));
-		}else {
+		} else {
 			String professorName = professor.getName();
-			List<Course> courseList =  courseService.getCourseByInstructor(professorName);
-			List<Student> students =  studentService.getStudentsByCourseCode(courseList.stream().map(Course::getCourseCode).collect(Collectors.toList()));
-			List<User> studentUsers = new ArrayList<>(); 
+			List<Course> courseList = courseService.getCourseByInstructor(professorName);
+			List<Student> students = studentService.getStudentsByCourseCode(
+					courseList.stream().map(Course::getCourseCode).collect(Collectors.toList()));
+			List<User> studentUsers = new ArrayList<>();
 //					userDao.getUserById(students.stream().map(Student::getStudentId).collect(Collectors.toList()));
-			JSONArray jsArray = createResponse(studentUsers,students,courseList);
+			JSONArray jsArray = createResponse(studentUsers, students, courseList);
 			return jsArray;
 		}
 	}
 
 	private JSONArray createResponse(List<User> studentUsers, List<Student> students, List<Course> courseList) {
 		JSONArray jsArray = new JSONArray();
-		courseList.forEach(course->{
+		courseList.forEach(course -> {
 			JSONObject js = new JSONObject();
-			List<Student> newStudents = students.stream().filter(std->std.getCourseCode().contains(course.getCourseCode())).collect(Collectors.toList());
-			newStudents.forEach(std->{
-				User user =studentUsers.stream().filter(usr->usr.getUserId() == std.getStudentId()).findAny().get();
+			List<Student> newStudents = students.stream()
+					.filter(std -> std.getCourseCode().contains(course.getCourseCode())).collect(Collectors.toList());
+			newStudents.forEach(std -> {
+				User user = studentUsers.stream().filter(usr -> usr.getUserId() == std.getStudentId()).findAny().get();
 				js.put("userId", user.getUserId());
-				js.put("firstName",user.getFirstname());
-				js.put("firstName",user.getLastName());
-				js.put("emailId",user.getEmailId());
-				js.put("coursename", getCoursename(std.getCourseCode().split(","),course));
+				js.put("firstName", user.getFirstname());
+				js.put("firstName", user.getLastName());
+				js.put("emailId", user.getEmailId());
+				js.put("coursename", getCoursename(std.getCourseCode().split(","), course));
 				jsArray.add(js);
 			});
 		});
@@ -72,8 +78,8 @@ public class ProfessorService implements ProfessorServiceInterface {
 	}
 
 	private String getCoursename(String[] courseCodes, Course course) {
-		for(String code: courseCodes) {
-			if(course.getCourseCode().equals(code)) {
+		for (String code : courseCodes) {
+			if (course.getCourseCode().equals(code)) {
 				return course.getCourseName();
 			}
 		}
@@ -85,9 +91,17 @@ public class ProfessorService implements ProfessorServiceInterface {
 		long userId = Long.valueOf(jsonBody.getAsString(Consonant.User_id));
 		Professor professor = professorDao.getProfessorById(userId);
 		List<Course> courseList = courseService.getCourseByInstructor(professor.getName());
-		return new ResponseEntity<>(courseList,HttpStatus.OK);
+		return new ResponseEntity<>(courseList, HttpStatus.OK);
 	}
 
-	
-	
+	public long addProfessor(User user) {
+		user.setPassword("Admin@123");
+		userService.createUser(user, 1, Role.Professor);
+		Professor professor = new Professor();
+		professor.setProfessorId(user.getUserId());
+		professor.setName(user.getFirstname());
+		return professorDao.saveProfessor(professor);
+
+	}
+
 }
