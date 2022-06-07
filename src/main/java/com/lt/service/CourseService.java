@@ -1,6 +1,7 @@
 package com.lt.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,9 @@ public class CourseService implements CourseServiceInterface {
 	CourseDAOImpl courseDao;
 	
 	
-	public List<Course> getCourses() {
-		return courseDao.getAllCourse();
+	public List<Map<String,Object>> getCourses() {
+		List<Map<String,Object>> course = courseDao.getAllCourse();
+		return course;
 	}
 
 	public List<Course> getCourseByCourseCode(List<String> courseCodes) {
