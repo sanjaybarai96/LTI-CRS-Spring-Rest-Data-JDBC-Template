@@ -2,6 +2,7 @@ package com.lt.dao;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -20,9 +21,9 @@ public class CourseDAOImpl implements CourseDAO {
 
 	@Override
 	@Transactional
-	public List<Course> getAllCourse() {
+	public List<Map<String,Object>> getAllCourse() {
 		String sql = "select * from course";
-		List<Course> courses = jdbcConfiguration.jdbcTemplate().queryForList(sql, Course.class);
+		List<Map<String,Object>> courses = jdbcConfiguration.jdbcTemplate().queryForList(sql);
 		return courses;
 	}
 

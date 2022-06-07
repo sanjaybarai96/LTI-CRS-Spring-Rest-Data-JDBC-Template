@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import com.It.mapper.StudentMapper;
 import com.lt.configuration.JDBCConfiguration;
 import com.lt.dto.RegisterCourse;
 import com.lt.dto.Student;
-import com.lt.mapper.StudentMapper;
 
 @Repository
 public class StudentDAOImpl implements StudentDAO {
@@ -37,8 +36,8 @@ public class StudentDAOImpl implements StudentDAO {
 
 	public long updateStudent(Student student, long userId) {
 		String sql = "update student set branch=?,coursecode=? where studentId=?";
-		jdbcConfiguration.jdbcTemplate().update(sql, student.getBranch(), student.getCourseCode(), userId);
-		logger.info("student branch update for id ::" + userId);
+		jdbcConfiguration.jdbcTemplate().update(sql,student.getBranch(),student.getCourseCode(),userId);
+		logger.info("student branch update for id ::"+userId);
 		return userId;
 	}
 
