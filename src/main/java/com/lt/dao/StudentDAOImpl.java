@@ -42,10 +42,10 @@ public class StudentDAOImpl implements StudentDAO {
 	}
 
 	public List<Student> getStudentByCourseCodes(List<String> courseCodes) {
-		String sql = "selec * from student where coursecode like %s";
-		String parameter = courseCodes.stream().map(code -> "%" + code + "%").collect(Collectors.joining("or"));
-		List<Student> studentList = jdbcConfiguration.jdbcTemplate().queryForList(String.format(sql, parameter),
-				Student.class);
+		String sql = "select * from student where %s";
+		String parameter = courseCodes.stream().map(code -> "coursecode like '%" + code + "%'").collect(Collectors.joining(" or "));
+		List<Student> studentList = jdbcConfiguration.jdbcTemplate().query(String.format(sql, parameter),
+				new StudentMapper());
 		return studentList;
 	}
 

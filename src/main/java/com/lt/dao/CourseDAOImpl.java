@@ -53,8 +53,8 @@ public class CourseDAOImpl implements CourseDAO {
 	}
 
 	public List<Course> getCourseByInstructor(String professorName) {
-		String sql = "select * from course where instructorname = ?";
-		List<Course> courseList = jdbcConfiguration.jdbcTemplate().queryForList(sql, Course.class, professorName);
+		String sql = "select * from course where instructor = ?";
+		List<Course> courseList = jdbcConfiguration.jdbcTemplate().query(sql,new Object[] {professorName},new CourseMapper());
 		return courseList;
 	}
 
