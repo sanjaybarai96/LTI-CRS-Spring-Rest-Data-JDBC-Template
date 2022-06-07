@@ -18,6 +18,13 @@ public class ProfessorDAOImpl implements ProfessorDAO {
 		return professor;
 		
 	}
+
+	public long saveProfessor(Professor professor) {
+		String sql = "insert into professor values (?,?)";
+		
+		jdbcConfiguration.jdbcTemplate().update(sql,professor.getProfessorId(),professor.getName());
+		return professor.getProfessorId();
+	}
 	
 	
 }

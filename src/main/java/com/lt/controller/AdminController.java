@@ -22,6 +22,8 @@ import com.lt.exception.CourseNotAddException;
 import com.lt.exception.CourseNotFoundException;
 import com.lt.service.AdminService;
 import com.lt.service.CourseService;
+import com.lt.service.ProfessorService;
+import com.lt.service.UserService;
 
 /**
  * @author user215
@@ -36,6 +38,12 @@ public class AdminController {
 
 	@Autowired
 	CourseService courseService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	ProfessorService professorService;
 
 	/**
 	 * admin adding course
@@ -69,16 +77,11 @@ public class AdminController {
 	 * 
 	 * @param user
 	 */
-	// @RequestMapping(value="/addProfessor",method = RequestMethod.POST)
-	// public ResponseEntity<User> addProfessor(@RequestBody User user) {
-	//
-	// user.setPassword("Admin@123");
-	// userService.createUser(user, 1, Role.Professor);
-	//
-	// professorService.addProfessor(user);
-	//
-	// return new ResponseEntity<User>(user, HttpStatus.OK);
-	// }
+	 @RequestMapping(value="/addProfessor",method = RequestMethod.POST)
+	 public ResponseEntity<User> addProfessor(@RequestBody User user) {
+		 adminService.addProfessor(user);
+	 return new ResponseEntity<User>(user, HttpStatus.OK);
+	 }
 
 	/**
 	 * Getting all the student which is not approved
