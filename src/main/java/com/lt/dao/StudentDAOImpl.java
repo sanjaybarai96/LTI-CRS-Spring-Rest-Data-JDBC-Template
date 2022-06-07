@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import com.It.mapper.StudentMapper;
@@ -18,20 +17,20 @@ import com.lt.dto.Student;
 public class StudentDAOImpl implements StudentDAO {
 
 	Logger logger = LoggerFactory.getLogger(StudentDAOImpl.class);
-	
+
 	@Autowired
 	JDBCConfiguration jdbcConfiguration;
-	
+
 	public long saveCourseRegistration(RegisterCourse registerCourse) {
-		String sql = "insert into registerCourse values(?,?)";
-		
-		jdbcConfiguration.jdbcTemplate().update(sql,registerCourse.getStudentId(),registerCourse.getBranch());
-		 return registerCourse.getStudentId();
+		String sql = "insert into registercourse values(?,?)";
+		jdbcConfiguration.jdbcTemplate().update(sql, registerCourse.getStudentId(), registerCourse.getBranch());
+		return registerCourse.getStudentId();
 	}
 
 	public Student getStudentByID(Number userId) {
 		String sql = "select * from student where studentId=?";
-		Student student = jdbcConfiguration.jdbcTemplate().queryForObject(sql,new Object[] {userId},new StudentMapper());
+		Student student = jdbcConfiguration.jdbcTemplate().queryForObject(sql, new Object[] { userId },
+				new StudentMapper());
 		return student;
 	}
 
@@ -44,21 +43,23 @@ public class StudentDAOImpl implements StudentDAO {
 
 	public List<Student> getStudentByCourseCodes(List<String> courseCodes) {
 		String sql = "selec * from student where coursecode like %s";
-		String parameter = courseCodes.stream().map(code->"%"+code+"%").collect(Collectors.joining("or"));
-		List<Student> studentList = jdbcConfiguration.jdbcTemplate().queryForList(String.format(sql, parameter),Student.class);
+		String parameter = courseCodes.stream().map(code -> "%" + code + "%").collect(Collectors.joining("or"));
+		List<Student> studentList = jdbcConfiguration.jdbcTemplate().queryForList(String.format(sql, parameter),
+				Student.class);
 		return studentList;
 	}
-	
+
 	@Override
 	public long saveStudent(Student student) {
 		String sql = "insert into student values(?,?,?)";
-		
+
 //		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
 //				.withTableName("student");
 
 //		 simpleInsertJdbcInsert.execute(student.toMap());
-		jdbcConfiguration.jdbcTemplate().update(sql,student.getStudentId(),student.getBranch(),student.getCourseCode());
-		 return student.getStudentId();
-		
+		jdbcConfiguration.jdbcTemplate().update(sql, student.getStudentId(), student.getBranch(),
+				student.getCourseCode());
+		return student.getStudentId();
+
 	}
 }
