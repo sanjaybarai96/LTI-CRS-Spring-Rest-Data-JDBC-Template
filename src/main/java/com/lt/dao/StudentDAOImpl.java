@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import com.It.mapper.StudentMapper;
 import com.lt.configuration.JDBCConfiguration;
 import com.lt.dto.RegisterCourse;
 import com.lt.dto.Student;
@@ -22,21 +23,20 @@ public class StudentDAOImpl implements StudentDAO {
 	JDBCConfiguration jdbcConfiguration;
 	
 	public long saveCourseRegistration(RegisterCourse registerCourse) {
-		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
-				.withTableName("registercourse")
-				.usingGeneratedKeyColumns("studentId");
+		String sql = "insert into registerCourse values(?,?)";
 		
-		return simpleInsertJdbcInsert.executeAndReturnKey(registerCourse.toMap()).longValue();
+		jdbcConfiguration.jdbcTemplate().update(sql,registerCourse.getStudentId(),registerCourse.getBranch());
+		 return registerCourse.getStudentId();
 	}
 
 	public Student getStudentByID(Number userId) {
-		String sql = "select * from student where userId=?";
-		Student student = jdbcConfiguration.jdbcTemplate().queryForObject(sql,Student.class,userId);
+		String sql = "select * from student where studentId=?";
+		Student student = jdbcConfiguration.jdbcTemplate().queryForObject(sql,new Object[] {userId},new StudentMapper());
 		return student;
 	}
 
 	public long updateStudent(Student student, long userId) {
-		String sql = "update student set branch=?,coursecode=? where userId=?";
+		String sql = "update student set branch=?,coursecode=? where studentId=?";
 		jdbcConfiguration.jdbcTemplate().update(sql,student.getBranch(),student.getCourseCode(),userId);
 		logger.info("student branch update for id ::"+userId);
 		return userId;
