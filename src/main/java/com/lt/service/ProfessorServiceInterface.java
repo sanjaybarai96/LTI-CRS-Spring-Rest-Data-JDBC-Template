@@ -10,6 +10,6 @@ import net.minidev.json.JSONObject;
 public interface ProfessorServiceInterface {
 
 	public JSONArray viewEnrolledStudents(JSONObject jsonObject);
-	public ResponseEntity<?> viewCourse(JSONObject userObj);
+	public ResponseEntity<?> viewCourse(long professorId);
 	public long addProfessor(User user);
 }

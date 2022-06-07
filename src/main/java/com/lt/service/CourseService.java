@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.lt.dao.CourseDAOImpl;
 import com.lt.dto.Course;
 import com.lt.exception.CourseNotAddException;
+import com.lt.exception.CourseNotFoundException;
 
 @Service
 public class CourseService implements CourseServiceInterface {
@@ -36,7 +37,7 @@ public class CourseService implements CourseServiceInterface {
 	public void removeCourse(String courseCode) {
 		boolean status = courseDao.removeCourse(courseCode);
 		if(!status) {
-			throw new CourseNotAddException(courseCode);
+			throw new CourseNotFoundException(courseCode);
 		}
 	}
 

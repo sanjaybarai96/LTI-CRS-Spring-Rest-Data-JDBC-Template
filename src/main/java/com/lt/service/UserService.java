@@ -48,6 +48,11 @@ public class UserService implements UserServiceInterface {
 			if (checkingCredentials(userMap, userName, password)) {
 				userMap.put("session",true);
 				userDao.updateSession(Long.valueOf(userMap.get("userId").toString()), true);
+			}else {
+				if(userMap.isEmpty())
+					return new ResponseEntity<>("User not found", HttpStatus.OK);
+				else
+					return new ResponseEntity<>("Password is incorrect", HttpStatus.OK);
 			}
 
 			return new ResponseEntity<>(userMap, HttpStatus.OK);
