@@ -1,7 +1,5 @@
 package com.lt.dao;
 
-
-
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +11,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import com.lt.configuration.JDBCConfiguration;
+import com.lt.consants.JDBCSqlConstant;
 import com.lt.consants.Role;
 import com.lt.dto.User;
-
 
 /**
  * @author user217
@@ -25,80 +23,70 @@ import com.lt.dto.User;
 public class UserDaoImpl implements UserDao {
 
 	Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
-	
+
 	@Autowired
 	JDBCConfiguration jdbcConfiguration;
-	
+
 	/**
-	 *get user method
+	 * get user method
 	 */
 	@Override
-	public Map<String,Object> getUserByUserName(String username) {
-		String sql = "select * from user where userName=?";
-//		User user= jdbcConfiguration.jdbcTemplate().queryForObject(sql,User.class,username);
-		Map<String,Object> userMap = jdbcConfiguration.jdbcTemplate().queryForMap(sql, username);
-		
+	public Map<String, Object> getUserByUserName(String username) {
+		Map<String, Object> userMap = jdbcConfiguration.jdbcTemplate().queryForMap(JDBCSqlConstant.UserByUserName,
+				username);
+
 		return userMap;
 	}
 
 	/**
-	 *getList All user
+	 * getList All user
 	 */
 	@Override
 	public List<User> getAllUser() {
-		String sql = "SELECT * FROM user";
-	     
-	    return jdbcConfiguration.jdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(User.class)); 
+	
+
+		return jdbcConfiguration.jdbcTemplate().query( JDBCSqlConstant.AllUser, BeanPropertyRowMapper.newInstance(User.class));
 	}
 
 	/**
 	 * get All Student User
- 	 */
+	 */
 	@Override
-	public List<Map<String,Object>> getAllStudentUser() {
-		String sql = "select * from user where role = ? and isApprove = 0";
-		List<Map<String,Object>> studentUsers = jdbcConfiguration.jdbcTemplate().queryForList(sql,Role.Student.name());
+	public List<Map<String, Object>> getAllStudentUser() {
+		List<Map<String, Object>> studentUsers = jdbcConfiguration.jdbcTemplate().queryForList(JDBCSqlConstant.AllStudentUser,
+				Role.Student.name());
 		return studentUsers;
 	}
 
-	
 	/**
 	 * saved user method
 	 */
 	@Override
 	public long saveUser(User user) {
 		SimpleJdbcInsert simpleInsertJdbcInsert = new SimpleJdbcInsert(jdbcConfiguration.jdbcTemplate())
-				.withTableName("user")
-				.usingGeneratedKeyColumns("userId");
+				.withTableName("user").usingGeneratedKeyColumns("userId");
 		return simpleInsertJdbcInsert.executeAndReturnKey(user.toMap()).longValue();
 	}
 
-	public void updateSession(long userId,boolean session) {
-	String sql ="update user set session=? where userId=?";
-	jdbcConfiguration.jdbcTemplate().update(sql,session,userId);
-	logger.info("User password updated ::"+userId);		
+	public void updateSession(long userId, boolean session) {
+		jdbcConfiguration.jdbcTemplate().update(JDBCSqlConstant.UpdateSession, session, userId);
+		logger.info("User password updated ::" + userId);
 	}
 
-
-
-
-
 	/**
-	 *update password
+	 * update password
 	 */
 	@Override
-	public long updateUserPassword(long userId,String newPassword) {
-		String sql = "update user set password=? where userId=?";
-		jdbcConfiguration.jdbcTemplate().update(sql,newPassword,userId);
-		logger.info("User password updated ::"+userId);
+	public long updateUserPassword(long userId, String newPassword) {
+		jdbcConfiguration.jdbcTemplate().update(JDBCSqlConstant.UpdateUserPassword, newPassword, userId);
+		logger.info("User password updated ::" + userId);
 		return userId;
 	}
 
 	public long approveStudent(long userId) {
-		String sql = "update user set isApprove=1 where userId=?";
-		jdbcConfiguration.jdbcTemplate().update(sql,userId);
-		logger.info("User approved ::"+userId);
+		jdbcConfiguration.jdbcTemplate().update(JDBCSqlConstant.ApproveStudent, userId);
+		logger.info("User approved ::" + userId);
 		return userId;
 	}
-	
+
 }
